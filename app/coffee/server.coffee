@@ -23,7 +23,6 @@ app.use bodyParser.json()
 app.use bodyParser.urlencoded
     extended: true
 app.use multer()
-app.use express.static(process.cwd() + '/web/doc/')
 app.use errorHandler()
 switch app.get('env')
     when 'local','dev'
@@ -45,10 +44,18 @@ allowCrossDomain = (req, res, next) ->
     res.header "Access-Control-Allow-Headers", "X-Requested-With"
     next()
 app.use allowCrossDomain
+#
+# static
+#
+app.use express.static(process.cwd() + '/web/doc/')
+#
+# dynmamic routes & controllers
+#
 erc(app,
     controllers: __dirname + '/../../web/js/controllers',
     routes: require './routes.json'
 )
+
 #
 # listen
 #
