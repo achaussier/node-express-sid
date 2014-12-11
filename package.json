@@ -1,8 +1,8 @@
 {
-    "name": "rackmonkey-api",
-    "description": "api part of rackmonkey, web tool allowing to manage and administrate network devices.",
+    "name": "node-express-sid",
+    "description": "It's a base to build a new API with doc, tests and tasks",
     "license" : "MIT",
-    "repository" : "cbragard/rackmonkey-api",
+    "repository" : "cbragard/node-express-sid",
     "version": "0.0.1",
     "scripts" : {
         "test" : "grunt test"
