@@ -1,6 +1,14 @@
 renameCoffee = (dest, name) ->
     dest + '/' + name.replace 'coffee', 'js'
 
+###*
+# @name validProjectName
+# @desc Function used to validate user input for name of project
+# @param {string} input User input
+###
+validProjectName = (value) ->
+    /^[\w-]+$/.test(value) and /^[^-]/.test(value) and /[^-]$/.test(value)
+
 #
 # GruntFile
 #
@@ -136,6 +144,75 @@ module.exports = (grunt) ->
                     marked:
                         gfm: true
 
+        #
+        # prompt
+        #
+        prompt:
+            target:
+                options:
+                    questions: [
+                        {
+                            config: 'projectName'
+                            type: 'input'
+                            message: 'What is your project name ? '
+                            default: 'my-project'
+                            validate: validProjectName
+                        },
+                        {
+                            config: 'description'
+                            type: 'input'
+                            message: 'What is the description of the project ? '
+                            default: ''
+                        },
+                        {
+                            config: 'license'
+                            type: 'input'
+                            message: 'What is the license of the project ? '
+                            default: 'MIT'
+                        },
+                        {
+                            config: 'repository'
+                            type: 'input'
+                            message: 'What is the repository of the project ? '
+                            default: ''
+                        }
+                    ]
+
+        #
+        # string-replace,
+        #
+        'string-replace':
+            dist:
+                files:
+                    './': 'package.json'
+                options:
+                    replacements: [
+                        {
+                            pattern: /("name" ?: "?).*/
+                            replacement:
+                                '$1'+"<%= grunt.config('projectName') %>"+'",'
+                        },
+                        {
+                            pattern: /("description" ?: ?").*/
+                            replacement:
+                                '$1'+"<%= grunt.config('description') %>"+'",'
+                        },
+                        {
+                            pattern: /("license" ?: ?").*/
+                            replacement:
+                                '$1'+"<%= grunt.config('license') %>"+'",'
+                        },
+                        {
+                            pattern: /("repository" ?: ?").*/
+                            replacement:
+                                '$1'+"<%= grunt.config('repository') %>"+'",'
+                        },
+                        {
+                            pattern: /("version" ?: ?").*/
+                            replacement:
+                                '$1' + '0.0.0",'
+                        }
+                    ]
     #
     # Load all needed npm tasks
     #
@@ -149,6 +226,8 @@ module.exports = (grunt) ->
     grunt.loadNpmTasks 'grunt-coffeelint'
     grunt.loadNpmTasks 'grunt-protractor-runner'
     grunt.loadNpmTasks 'grunt-apidoc'
+    grunt.loadNpmTasks 'grunt-prompt'
+    grunt.loadNpmTasks 'grunt-string-replace'
 
     grunt.registerTask 'serve', (target) ->
         target = 'local' if target is undefined
@@ -178,4 +257,9 @@ module.exports = (grunt) ->
     grunt.registerTask 'default', [
         'build'
         'serve'
+    ]
+
+    grunt.registerTask 'configure', [
+        'prompt'
+        'string-replace'
     ]
