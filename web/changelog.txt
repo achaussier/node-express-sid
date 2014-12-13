@@ -1,0 +1,3 @@
+2014-12-13 Alexandre Chaussier <a.chaussier@infopen.pro>
+- add a new Grunt task to configure a new project (grunt configure)
+
