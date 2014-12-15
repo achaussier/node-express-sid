@@ -213,6 +213,7 @@ module.exports = (grunt) ->
                                 '$1' + '0.0.0",'
                         }
                     ]
+
     #
     # Load all needed npm tasks
     #
